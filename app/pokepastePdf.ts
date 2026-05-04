@@ -43,6 +43,9 @@ const CHAMPIONS_MIN_TEAM_SIZE = 4;
 const CHAMPIONS_MAX_TEAM_SIZE = 6;
 const CHAMPIONS_MIN_MOVES = 1;
 const CHAMPIONS_MAX_MOVES = 4;
+const FOOTER_TEXT = "Made with SwiftSheets: bruceb04.github.io/swiftsheets/";
+const FOOTER_FONT_SIZE = 6;
+const FOOTER_BOTTOM_MARGIN = 7;
 
 type NatureModifier = [boosted: StatKey | null, lowered: StatKey | null];
 
@@ -467,6 +470,19 @@ function checkbox(page: PDFPage, boldFont: PDFFont, x: number, y: number, mark: 
   });
 }
 
+function drawPageFooter(page: PDFPage, font: PDFFont): void {
+  const { width } = page.getSize();
+  const textWidth = font.widthOfTextAtSize(FOOTER_TEXT, FOOTER_FONT_SIZE);
+
+  page.drawText(FOOTER_TEXT, {
+    x: Math.max(4, (width - textWidth) / 2),
+    y: FOOTER_BOTTOM_MARGIN,
+    size: FOOTER_FONT_SIZE,
+    font,
+    color: rgb(0, 0, 0),
+  });
+}
+
 function drawMetadata(page: PDFPage, font: PDFFont, boldFont: PDFFont, metadata: TeamSheetMetadata, staff: boolean): void {
   const ageDivision = (metadata.ageDivision ?? "Masters").toLowerCase();
 
@@ -534,6 +550,8 @@ function drawTeamPage(page: PDFPage, font: PDFFont, boldFont: PDFFont, team: Pok
     const ys = [592, 407, 222];
     team.forEach((mon, index) => drawMonOpponent(page, font, mon, xs[index % 2], ys[Math.floor(index / 2)]));
   }
+
+  drawPageFooter(page, font);
 }
 
 export async function generateTeamSheetPdf(params: {

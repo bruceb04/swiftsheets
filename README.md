@@ -1,41 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SwiftSheets
+
+SwiftSheets is a browser-based teamsheet builder for Pokemon Champions events. It converts Pokepaste or Pokemon Showdown-style team text into a completed Champions teamsheet PDF, including player information, Pokemon details, moves, held items, abilities, calculated level 50 stats, and event-ready staff and opponent views.
+
+The app is built as a static Next.js application, so it can be hosted on GitHub Pages without a backend. PDF generation runs in the browser with `pdf-lib`, while Pokemon species data and base stats come from `@pkmn/dex`.
+
+## Features
+
+- Parse teams from standard Pokepaste / Pokemon Showdown text.
+- Validate required player metadata before generating a sheet.
+- Validate Champions team constraints, including:
+  - 4-6 Pokemon per team
+  - Level 50 Pokemon
+  - 1-4 moves per Pokemon
+  - Recognized Pokemon species
+  - Recognized natures
+  - Champions stat point limits
+- Treat `EVs` lines as Pokemon Champions stat points.
+- Calculate level 50 stats from species base stats, 31 IVs, stat points, and nature modifiers.
+- Generate a marked PDF from the bundled `blanksheet.pdf` template.
+- Preview the generated PDF in the app before downloading.
+- Export as a static site for GitHub Pages.
+
+## Tech Stack
+
+- [Next.js](https://nextjs.org/) 16
+- [React](https://react.dev/) 19
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/) 4
+- [`pdf-lib`](https://pdf-lib.js.org/) for PDF editing
+- [`@pkmn/dex`](https://github.com/pkmn/ps/tree/main/dex) for Pokemon data
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 22 is recommended for parity with the GitHub Pages workflow.
+- npm, which is included with Node.js.
+
+### Installation
+
+```bash
+npm install
+```
+
+### Local Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Enter the required player information.
+2. Paste a 4-6 Pokemon team in Pokepaste or Pokemon Showdown format.
+3. Use `EVs` lines for Champions stat points, for example:
 
-## Learn More
+```text
+Pikachu @ Light Ball
+Ability: Static
+Level: 50
+EVs: 32 Atk / 32 Spe
+Jolly Nature
+- Fake Out
+- Volt Tackle
+- Protect
+- Feint
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. Resolve any validation messages shown in the sidebar.
+5. Select `Preview PDF` to inspect the completed teamsheet.
+6. Select `Download PDF` to save the generated file.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Available Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Starts the local Next.js development server. |
+| `npm run build` | Builds the static export into the `out` directory. |
+| `npm run lint` | Runs ESLint. |
+| `npm run start` | Runs the Next.js production start command. For static hosting previews, serve the generated `out` directory instead. |
 
-## Deploy on GitHub Pages
+## Project Structure
 
-This app is configured for static export and GitHub Pages.
+```text
+app/
+  TeamSheetApp.tsx   Main client-side form, validation UI, preview, and download flow.
+  pokepastePdf.ts    Pokepaste parsing, team validation, stat calculation, and PDF drawing.
+  page.tsx           App route entry point.
+public/
+  blanksheet.pdf     PDF template used by the generator.
+.github/workflows/
+  deploy.yml         GitHub Pages deployment workflow.
+next.config.ts       Static export and GitHub Pages base path configuration.
+```
 
-1. Push this repository to GitHub on the `main` branch.
+## Static Export
+
+SwiftSheets is configured with `output: "export"` in `next.config.ts`. Running the build command produces a static site in `out`.
+
+```bash
+npm run build
+```
+
+The app automatically accounts for GitHub Pages project paths by setting `NEXT_PUBLIC_BASE_PATH` during GitHub Actions builds. Project Pages repositories are served from `/<repository-name>`, while user or organization Pages repositories ending in `.github.io` are served from the domain root.
+
+## Deployment
+
+This repository includes a GitHub Actions workflow for GitHub Pages.
+
+1. Push the repository to the `main` branch.
 2. In GitHub, open **Settings > Pages**.
 3. Set **Build and deployment > Source** to **GitHub Actions**.
-4. The `Deploy to GitHub Pages` workflow will build the app and publish the `out` folder.
+4. Run the `Deploy to GitHub Pages` workflow, or push to `main`.
 
-For project Pages sites, the build automatically uses the repository name as the base path, such as `/swiftsheets`. For user or organization Pages repositories ending in `.github.io`, it publishes at the domain root.
+The workflow installs dependencies with `npm ci`, builds the static export, uploads the `out` directory, and publishes it to GitHub Pages.
+
+## Notes
+
+- PDF generation is client-side; the app does not require a custom API server.
+- The bundled `blanksheet.pdf` template must remain available in `public/` for local and deployed builds.
+- Mega-evolved Pokemon should be entered as their base species holding the appropriate Mega Stone.
+
