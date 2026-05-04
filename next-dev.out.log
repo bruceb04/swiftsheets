@@ -29,3 +29,21 @@ Creating turbopack project {
  GET / 200 in 183ms (next.js: 130ms, application-code: 53ms)
 ✓ Compiled in 42ms
  GET / 200 in 146ms (next.js: 100ms, application-code: 46ms)
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.233:3000
+✓ Ready in 659ms
+Creating turbopack project {
+  dir: "C:\\Users\\Beta's PC\\Documents\\pokepaste_pdf_program\\swiftsheets",
+  testMode: true
+}
+
+ GET / 200 in 1112ms (next.js: 622ms, application-code: 490ms)
+✓ Compiled in 40ms
+ GET / 200 in 184ms (next.js: 112ms, application-code: 71ms)
+✓ Compiled in 45ms
+ GET / 200 in 187ms (next.js: 113ms, application-code: 74ms)
+✓ Compiled in 27ms
+ GET / 200 in 167ms (next.js: 115ms, application-code: 52ms)
+✓ Compiled in 39ms
+ GET / 200 in 182ms (next.js: 116ms, application-code: 66ms)

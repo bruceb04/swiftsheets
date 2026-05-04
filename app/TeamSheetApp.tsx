@@ -17,6 +17,12 @@ type FormState = Required<TeamSheetMetadata> & {
 };
 
 const POKEDEX = buildPokedexFromDex();
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+function withBasePath(path: string): string {
+  if (!BASE_PATH) return path;
+  return `${BASE_PATH}${path.startsWith("/") ? path : `/${path}`}`;
+}
 
 const INITIAL_FORM: FormState = {
   playerName: "",
@@ -115,7 +121,7 @@ export default function TeamSheetApp() {
       throw new Error("Fix the highlighted fields before generating the teamsheet.");
     }
 
-    const response = await fetch("/blanksheet.pdf");
+    const response = await fetch(withBasePath("/blanksheet.pdf"));
     if (!response.ok) {
       throw new Error("Could not load blanksheet.pdf from the public folder.");
     }

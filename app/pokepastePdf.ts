@@ -126,14 +126,16 @@ export function cleanName(name: string): string {
     cleaned = cleaned.split(" @ ", 1)[0].trim();
   }
 
-  const match = cleaned.match(/\(([^)]+)\)\s*$/);
-  if (!match || match.index === undefined) return cleaned;
+  cleaned = cleaned.replace(/\s*\((?:m|f|genderless)\)\s*[^a-z0-9]*$/i, "").trim();
 
-  const parenthetical = match[1].trim();
-  if (["m", "f", "genderless"].includes(parenthetical.toLowerCase())) {
-    return cleaned.slice(0, match.index).trim();
-  }
-  return parenthetical;
+  const match = cleaned.match(/\(([^)]+)\)\s*[^a-z0-9]*$/i);
+  if (!match || match.index === undefined) return cleanSpeciesName(cleaned);
+
+  return cleanSpeciesName(match[1]);
+}
+
+function cleanSpeciesName(name: string): string {
+  return name.trim().replace(/^[^a-z0-9]+|[^a-z0-9]+$/gi, "");
 }
 
 export function parseStatsLine(line: string): Partial<Record<StatKey, string>> {
@@ -190,7 +192,7 @@ export function parsePokepaste(text: string): PokemonSet[] {
       item: "",
       ability: "",
       level: String(CHAMPIONS_LEVEL),
-      nature: "",
+      nature: "Serious",
       hasNature: false,
       hasStatPoints: false,
       statPoints: {},
@@ -342,9 +344,7 @@ export function validatePokemonTeam(pokepasteText: string, pokedex: Pokedex): Te
       issues.push({ field, message: `${label} is missing an Ability line.` });
     }
 
-    if (!mon.hasNature || !mon.nature) {
-      issues.push({ field, message: `${label} is missing a Nature or Stat Alignment line.` });
-    } else if (!NATURE_MODIFIERS[mon.nature.trim().toLowerCase()]) {
+    if (mon.hasNature && !NATURE_MODIFIERS[mon.nature.trim().toLowerCase()]) {
       issues.push({ field, message: `${label} has an unrecognized nature: ${mon.nature}.` });
     }
 
