@@ -1,0 +1,31 @@
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.233:3000
+✓ Ready in 667ms
+Creating turbopack project {
+  dir: "C:\\Users\\Beta's PC\\Documents\\pokepaste_pdf_program\\swiftsheets",
+  testMode: true
+}
+
+○ Compiling / ...
+ GET / 200 in 4.7s (next.js: 4.0s, application-code: 643ms)
+ GET / 200 in 566ms (next.js: 154ms, application-code: 411ms)
+ GET / 200 in 67ms (next.js: 4ms, application-code: 63ms)
+✓ Compiled in 41ms
+ GET / 200 in 213ms (next.js: 117ms, application-code: 96ms)
+ GET / 200 in 309ms (next.js: 5ms, application-code: 304ms)
+✓ Compiled in 33ms
+ GET / 200 in 209ms (next.js: 151ms, application-code: 58ms)
+✓ Compiled in 50ms
+ GET / 200 in 145ms (next.js: 110ms, application-code: 35ms)
+ GET / 200 in 440ms (next.js: 4ms, application-code: 436ms)
+✓ Compiled in 24ms
+ GET / 200 in 177ms (next.js: 121ms, application-code: 57ms)
+ GET / 200 in 412ms (next.js: 4ms, application-code: 409ms)
+✓ Compiled in 60ms
+ GET / 200 in 121ms (next.js: 91ms, application-code: 30ms)
+ GET / 200 in 390ms (next.js: 3ms, application-code: 388ms)
+✓ Compiled in 23ms
+ GET / 200 in 183ms (next.js: 130ms, application-code: 53ms)
+✓ Compiled in 42ms
+ GET / 200 in 146ms (next.js: 100ms, application-code: 46ms)
