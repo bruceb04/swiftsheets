@@ -323,6 +323,26 @@ export default function TeamSheetApp() {
             </div>
           </aside>
         </div>
+
+        <footer className="flex justify-center gap-3 pb-2 text-[11px] text-zinc-500">
+          <a
+            className="underline-offset-2 transition hover:text-emerald-700 hover:underline"
+            href="https://forms.gle/ynKqS5sqHVQN7vdJ6"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Give Feedback
+          </a>
+          <span aria-hidden="true">/</span>
+          <a
+            className="underline-offset-2 transition hover:text-emerald-700 hover:underline"
+            href="https://x.com/bruce_b04"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Follow me on X
+          </a>
+        </footer>
       </div>
     </main>
   );
