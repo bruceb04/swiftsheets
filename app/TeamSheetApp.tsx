@@ -190,7 +190,7 @@ export default function TeamSheetApp() {
           </div>
           <div className="grid grid-cols-3 gap-2 text-center text-sm">
             <div className="border border-zinc-300 bg-white px-4 py-3">
-              <p className="font-semibold">{teamCount}/6</p>
+              <p className="font-semibold">{teamCount}/4-6</p>
               <p className="text-zinc-600">Pokemon</p>
             </div>
             <div className="border border-zinc-300 bg-white px-4 py-3">
@@ -261,7 +261,7 @@ export default function TeamSheetApp() {
                 }`}
                 value={form.pokepaste}
                 placeholder={
-                  "Pikachu @ Light Ball\nAbility: Static\nEVs: 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Volt Tackle\n- Protect\n- Feint\n\nRepeat for exactly 6 Pokemon..."
+                  "Pikachu @ Light Ball\nAbility: Static\nEVs: 32 Atk / 32 Spe\nJolly Nature\n- Fake Out\n- Volt Tackle\n- Protect\n- Feint\n\nRepeat for 4-6 Pokemon..."
                 }
                 aria-invalid={Boolean(issueForField(allIssues, "pokepaste"))}
                 onChange={(event) => updateField("pokepaste", event.target.value)}

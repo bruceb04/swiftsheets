@@ -39,6 +39,10 @@ const CHAMPIONS_IV = 31;
 const CHAMPIONS_MAX_STAT_POINTS = 32;
 const CHAMPIONS_MAX_TOTAL_STAT_POINTS = 66;
 const CHAMPIONS_LEVEL = 50;
+const CHAMPIONS_MIN_TEAM_SIZE = 4;
+const CHAMPIONS_MAX_TEAM_SIZE = 6;
+const CHAMPIONS_MIN_MOVES = 1;
+const CHAMPIONS_MAX_MOVES = 4;
 
 type NatureModifier = [boosted: StatKey | null, lowered: StatKey | null];
 
@@ -311,14 +315,16 @@ export function validatePokemonTeam(pokepasteText: string, pokedex: Pokedex): Te
   if (!pokepasteText.trim()) {
     issues.push({
       field: "pokepaste",
-      message: "Paste a six-Pokemon team in Pokepaste or Pokemon Showdown format.",
+      message: "Paste a 4-6 Pokemon team in Pokepaste or Pokemon Showdown format.",
     });
   }
 
-  if (team.length !== 6) {
+  if (team.length < CHAMPIONS_MIN_TEAM_SIZE || team.length > CHAMPIONS_MAX_TEAM_SIZE) {
     issues.push({
       field: "pokepaste",
-      message: `The teamsheet must contain exactly 6 Pokemon; ${team.length} ${team.length === 1 ? "set was" : "sets were"} found.`,
+      message:
+        `The teamsheet must contain ${CHAMPIONS_MIN_TEAM_SIZE}-${CHAMPIONS_MAX_TEAM_SIZE} Pokemon; ` +
+        `${team.length} ${team.length === 1 ? "set was" : "sets were"} found.`,
     });
   }
 
@@ -334,10 +340,6 @@ export function validatePokemonTeam(pokepasteText: string, pokedex: Pokedex): Te
       } catch (error) {
         issues.push({ field, message: error instanceof Error ? error.message : `${label} is not recognized.` });
       }
-    }
-
-    if (!mon.item) {
-      issues.push({ field, message: `${label} is missing an item on the first line.` });
     }
 
     if (!mon.ability) {
@@ -368,10 +370,12 @@ export function validatePokemonTeam(pokepasteText: string, pokedex: Pokedex): Te
       }
     }
 
-    if (mon.moves.length !== 4) {
+    if (mon.moves.length < CHAMPIONS_MIN_MOVES || mon.moves.length > CHAMPIONS_MAX_MOVES) {
       issues.push({
         field,
-        message: `${label} must have exactly 4 moves; ${mon.moves.length} ${mon.moves.length === 1 ? "move was" : "moves were"} found.`,
+        message:
+          `${label} must have ${CHAMPIONS_MIN_MOVES}-${CHAMPIONS_MAX_MOVES} moves; ` +
+          `${mon.moves.length} ${mon.moves.length === 1 ? "move was" : "moves were"} found.`,
       });
     }
   });
