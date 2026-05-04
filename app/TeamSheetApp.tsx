@@ -12,7 +12,8 @@ import {
   validatePokemonTeam,
 } from "./pokepastePdf";
 
-type FormState = Required<TeamSheetMetadata> & {
+type FormState = Omit<Required<TeamSheetMetadata>, "ageDivision"> & {
+  ageDivision: AgeDivision | "";
   pokepaste: string;
 };
 
@@ -26,7 +27,7 @@ function withBasePath(path: string): string {
 
 const INITIAL_FORM: FormState = {
   playerName: "",
-  ageDivision: "Masters",
+  ageDivision: "",
   trainerName: "",
   playerId: "",
   battleTeam: "",
@@ -49,28 +50,6 @@ const FIELD_LABELS: Array<{
   { name: "switchProfile", label: "Switch profile", placeholder: "SwiftSheets" },
 ];
 
-function metadataIssues(form: FormState): ValidationIssue[] {
-  const issues: ValidationIssue[] = [];
-
-  FIELD_LABELS.forEach((field) => {
-    if (!form[field.name].trim()) {
-      issues.push({
-        field: field.name,
-        message: `${field.label} is required.`,
-      });
-    }
-  });
-
-  if (!form.ageDivision) {
-    issues.push({
-      field: "ageDivision",
-      message: "Age division is required.",
-    });
-  }
-
-  return issues;
-}
-
 function issueForField(issues: ValidationIssue[], field: string): string | undefined {
   return issues.find((issue) => issue.field === field)?.message;
 }
@@ -91,7 +70,7 @@ export default function TeamSheetApp() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const validation = useMemo(() => validatePokemonTeam(form.pokepaste, POKEDEX), [form.pokepaste]);
-  const allIssues = useMemo(() => [...metadataIssues(form), ...validation.issues], [form, validation.issues]);
+  const allIssues = validation.issues;
   const isValid = allIssues.length === 0;
   const teamCount = validation.team.length;
 
@@ -132,7 +111,7 @@ export default function TeamSheetApp() {
       pokedex: POKEDEX,
       metadata: {
         playerName: form.playerName.trim(),
-        ageDivision: form.ageDivision,
+        ageDivision: form.ageDivision || undefined,
         trainerName: form.trainerName.trim(),
         playerId: form.playerId.trim(),
         battleTeam: form.battleTeam.trim(),
@@ -209,38 +188,31 @@ export default function TeamSheetApp() {
             <div className="bg-white p-4 shadow-sm ring-1 ring-zinc-200 sm:p-5">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold">Player information</h2>
-                <span className="text-sm text-zinc-500">All fields required</span>
+                <span className="text-sm text-zinc-500">Optional</span>
               </div>
 
               <div className="grid gap-4 md:grid-cols-2">
-                {FIELD_LABELS.map((field) => {
-                  const error = issueForField(allIssues, field.name);
-
-                  return (
-                    <label key={field.name} className="flex flex-col gap-1.5">
-                      <span className="text-sm font-medium">{field.label}</span>
-                      <input
-                        className={`h-11 border bg-white px-3 text-sm outline-none transition focus:border-emerald-700 ${
-                          error ? "border-red-500" : "border-zinc-300"
-                        }`}
-                        type={field.type ?? "text"}
-                        value={form[field.name]}
-                        placeholder={field.placeholder}
-                        aria-invalid={Boolean(error)}
-                        onChange={(event) => updateField(field.name, event.target.value)}
-                      />
-                      {error ? <span className="text-xs text-red-700">{error}</span> : null}
-                    </label>
-                  );
-                })}
+                {FIELD_LABELS.map((field) => (
+                  <label key={field.name} className="flex flex-col gap-1.5">
+                    <span className="text-sm font-medium">{field.label}</span>
+                    <input
+                      className="h-11 border border-zinc-300 bg-white px-3 text-sm outline-none transition focus:border-emerald-700"
+                      type={field.type ?? "text"}
+                      value={form[field.name]}
+                      placeholder={field.placeholder}
+                      onChange={(event) => updateField(field.name, event.target.value)}
+                    />
+                  </label>
+                ))}
 
                 <label className="flex flex-col gap-1.5">
                   <span className="text-sm font-medium">Age division</span>
                   <select
                     className="h-11 border border-zinc-300 bg-white px-3 text-sm outline-none transition focus:border-emerald-700"
                     value={form.ageDivision}
-                    onChange={(event) => updateField("ageDivision", event.target.value as AgeDivision)}
+                    onChange={(event) => updateField("ageDivision", event.target.value as FormState["ageDivision"])}
                   >
+                    <option value="">Not specified</option>
                     <option value="Juniors">Juniors</option>
                     <option value="Seniors">Seniors</option>
                     <option value="Masters">Masters</option>

@@ -484,7 +484,7 @@ function drawPageFooter(page: PDFPage, font: PDFFont): void {
 }
 
 function drawMetadata(page: PDFPage, font: PDFFont, boldFont: PDFFont, metadata: TeamSheetMetadata, staff: boolean): void {
-  const ageDivision = (metadata.ageDivision ?? "Masters").toLowerCase();
+  const ageDivision = metadata.ageDivision?.toLowerCase();
 
   fitText(page, font, metadata.playerName, 120, 681, 145, 9);
   checkbox(page, boldFont, 447, 670, ageDivision === "juniors");
