@@ -46,6 +46,7 @@ const CHAMPIONS_MAX_MOVES = 4;
 const FOOTER_TEXT = "Made with SwiftSheets: bruceb04.github.io/swiftsheets/";
 const FOOTER_FONT_SIZE = 6;
 const FOOTER_BOTTOM_MARGIN = 7;
+const TEAM_DATA_FONT_SIZE = 11;
 
 type NatureModifier = [boosted: StatKey | null, lowered: StatKey | null];
 
@@ -505,7 +506,7 @@ function drawMetadata(page: PDFPage, font: PDFFont, boldFont: PDFFont, metadata:
 
 function drawMonStaff(page: PDFPage, font: PDFFont, mon: PokemonSet, x: number, y: number): void {
   const valueX = x + 72;
-  const statX = x + 238;
+  const statX = x + 234;
 
   const rows: Array<[value: string, statValue: string]> = [
     [mon.pokemon, mon.level],
@@ -520,11 +521,11 @@ function drawMonStaff(page: PDFPage, font: PDFFont, mon: PokemonSet, x: number, 
   rows.forEach(([value, statValue], index) => {
     const yy = y - index * 25.2;
     if (index === 0) {
-      fitText(page, font, value, valueX, yy, 125, 8.5);
-      if (statValue && statValue !== "50") fitText(page, font, statValue, statX, yy, 22, 8.5);
+      fitText(page, font, value, valueX, yy, 125, TEAM_DATA_FONT_SIZE);
+      if (statValue && statValue !== "50") fitText(page, font, statValue, statX, yy, 22, TEAM_DATA_FONT_SIZE);
     } else {
-      fitText(page, font, value, valueX, yy, 120, 8.0);
-      fitText(page, font, statValue, statX, yy, 22, 8.0);
+      fitText(page, font, value, valueX, yy, 120, TEAM_DATA_FONT_SIZE);
+      fitText(page, font, statValue, statX, yy, 22, TEAM_DATA_FONT_SIZE);
     }
   });
 }
@@ -534,7 +535,7 @@ function drawMonOpponent(page: PDFPage, font: PDFFont, mon: PokemonSet, x: numbe
   const offsets = [0, 25.2, 50.4, 75.6, 100.8, 126.0, 151.2];
 
   values.forEach((value, index) => {
-    fitText(page, font, value, x + 72, y - offsets[index], 142, 8.5);
+    fitText(page, font, value, x + 72, y - offsets[index], 142, TEAM_DATA_FONT_SIZE);
   });
 }
 
@@ -544,11 +545,11 @@ function drawTeamPage(page: PDFPage, font: PDFFont, boldFont: PDFFont, team: Pok
   if (staff) {
     const xs = [43, 323];
     const ys = [572, 390, 208];
-    team.forEach((mon, index) => drawMonStaff(page, font, mon, xs[index % 2], ys[Math.floor(index / 2)]));
+    team.forEach((mon, index) => drawMonStaff(page, boldFont, mon, xs[index % 2], ys[Math.floor(index / 2)]));
   } else {
     const xs = [43, 323];
     const ys = [592, 407, 222];
-    team.forEach((mon, index) => drawMonOpponent(page, font, mon, xs[index % 2], ys[Math.floor(index / 2)]));
+    team.forEach((mon, index) => drawMonOpponent(page, boldFont, mon, xs[index % 2], ys[Math.floor(index / 2)]));
   }
 
   drawPageFooter(page, font);
