@@ -92,6 +92,7 @@ export type TeamSheetMetadata = {
 
 export type PokemonSet = {
   pokemon: string;
+  speciesId?: string;
   item: string;
   ability: string;
   level: string;
@@ -105,6 +106,7 @@ export type PokemonSet = {
 
 export type PokedexSpecies = {
   name?: string;
+  displayName?: string;
   baseSpecies?: string;
   requiredItem?: string;
   isMega?: boolean;
@@ -255,6 +257,7 @@ export function buildPokedexFromDex(): Pokedex {
 
     pokedex[toId(species.name)] = {
       name: species.name,
+      displayName: species.forme ? species.baseSpecies : species.name,
       baseSpecies: species.baseSpecies,
       requiredItem: species.requiredItem ?? species.requiredItems?.[0],
       isMega: species.isMega,
@@ -273,7 +276,7 @@ export function buildPokedexFromDex(): Pokedex {
 }
 
 function getSpeciesData(mon: PokemonSet, pokedex: Pokedex): PokedexSpecies {
-  const speciesId = toId(mon.pokemon);
+  const speciesId = mon.speciesId ?? toId(mon.pokemon);
   const species = pokedex[speciesId];
 
   if (!species) {
@@ -340,7 +343,9 @@ export function validatePokemonTeam(pokepasteText: string, pokedex: Pokedex): Te
       issues.push({ field, message: `Pokemon ${index + 1} is missing a species name.` });
     } else {
       try {
-        getSpeciesData(mon, pokedex);
+        mon.speciesId = toId(mon.pokemon);
+        const species = getSpeciesData(mon, pokedex);
+        mon.pokemon = species.displayName ?? species.name ?? mon.pokemon;
       } catch (error) {
         issues.push({ field, message: error instanceof Error ? error.message : `${label} is not recognized.` });
       }
